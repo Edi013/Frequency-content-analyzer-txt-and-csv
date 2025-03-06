@@ -40,12 +40,19 @@ def display_percentages():
     for widget in chart_frame.winfo_children():
         widget.destroy()
 
-    fig, ax = plt.subplots(figsize=(6, 4))
-    ax.bar(word_percentages.keys(), word_percentages.values(), color='skyblue')
-    ax.set_xlabel('Words')
-    ax.set_ylabel('Percentage (%)')
-    ax.set_title(f'Word Percentages in {filename}')
-    plt.xticks(rotation=90)
+    no_words_displayed = len(word_percentages.items()) if 50 > len(word_percentages.items()) else 50
+    sorted_word_percentages = dict(sorted(word_percentages.items(), key=lambda item: item[1], reverse=True)[:no_words_displayed])
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    ax.barh(list(sorted_word_percentages.keys()), list(sorted_word_percentages.values()), color='skyblue')
+
+    ax.set_xlabel('Percentage (%)')
+    ax.set_ylabel('Words')
+    ax.set_title(f'Top {no_words_displayed} Word Percentages in {filename}')
+
+    for i, (word, percentage) in enumerate(sorted_word_percentages.items()):
+        ax.text(percentage + 0.5, i, f'{percentage:.2f}%', va='center', fontweight='bold')
 
     canvas = FigureCanvasTkAgg(fig, master=chart_frame)
     canvas.draw()
@@ -54,9 +61,9 @@ def display_percentages():
 
 root = tk.Tk()
 root.title("Word Percentage Calculator")
-root.geometry("600x700")
+root.geometry("1920x1080")
 
-text_widget = tk.Text(root, height=15, width=120, font=("Arial", 20))
+text_widget = tk.Text(root, height=15, width=120, font=("Arial", 12))
 text_widget.pack(pady=10)
 
 calculate_button = tk.Button(root, text="Calculate Word Percentages", command=display_percentages, font=("Arial", 20))
