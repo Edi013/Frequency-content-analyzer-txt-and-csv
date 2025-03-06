@@ -1,1 +1,0 @@
-is a word boundary anchor. It matches the position between a word character (like a letter, digit, or underscore) and a non-word character (like spaces, punctuation, or line breaks).
